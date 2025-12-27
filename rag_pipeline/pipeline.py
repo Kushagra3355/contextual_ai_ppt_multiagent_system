@@ -1,17 +1,65 @@
+# class RAGPipeline:
+
+#     def __init__(self):
+#         self.vectorstore = None
+#         self.retriever = None
+
+#     def build(self, file_path):
+#         docs = load_documents(file_path=file_path)
+#         split_docs = split_documents(documents=docs, chunk_overlap=120, chunk_size=600)
+#         self.vectorstore = build_vectorstore(
+#             chunks=split_docs, persist_directory="vector_db"
+#         )
+#         self.retriever = get_retriever(self.vectorstore, 5)
+
+#     def load(self):
+#         self.vectorstore = load_vectorstore(persist_directory="vector_db")
+#         self.retriever = get_retriever(self.vectorstore)
+
+#     def query(self, question, k=5):
+#         if not self.retriever:
+#             raise RuntimeError("RAGPipeline not built or loaded")
+
+#         docs = self.retriever._get_relevant_documents(question)
+
+#         return docs
+
 from rag_pipeline.loader import load_documents
 from rag_pipeline.splitter import split_documents
 from rag_pipeline.vector_store import build_vectorstore, load_vectorstore
 from rag_pipeline.retriever import get_retriever
 
-def ingest_pipeline(data_dir: str):
-    documents = load_documents(data_dir)
-    chunks = split_documents(documents)
-    build_vectorstore(chunks)
-    print(f"✅ Ingested {len(chunks)} chunks")
 
-def query_pipeline():
-    vectorstore = load_vectorstore()
-    if not vectorstore:
-        raise RuntimeError("Vector DB not found. Run ingestion first.")
+class RAGPipeline:
+    def __init__(self):
+        self.retriever = None
 
-    return get_retriever(vectorstore)
+    def ingest(self, data_dir: str):
+        """
+        Run ingestion: load → split → embed → store
+        """
+        documents = load_documents(data_dir)
+        chunks = split_documents(documents, 800, 120)
+        build_vectorstore(chunks)
+
+        print(f"✅ Ingested {len(chunks)} chunks")
+
+    def load(self):
+        """
+        Load existing vectorstore and create retriever
+        """
+        vectorstore = load_vectorstore()
+        if not vectorstore:
+            raise RuntimeError("Vector DB not found. Run ingest() first.")
+
+        self.retriever = get_retriever(vectorstore)
+
+    def query(self, question: str):
+        """
+        Retrieve relevant documents for a query
+        """
+        if not self.retriever:
+            raise RuntimeError("Pipeline not loaded. Call load() first.")
+
+        vectorstore = load_vectorstore()
+        return vectorstore.similarity_search(question, k=5)

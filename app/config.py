@@ -7,7 +7,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
 EMBED_MODEL_NAME = os.getenv("EMBED_MODEL_NAME", "text-embedding-3-small")
 TEMPERATURE = float(os.getenv("TEMPERATURE", 0))
-DIMENSIONS = float(os.getenv("DIMENSIONS", 128))
+DIMENSIONS = float(os.getenv("DIMENSIONS", 512))
+CHUNK_SIZE = float(os.getenv("CHUNK_SIZE", 1000))
 
 if not OPENAI_API_KEY:
     raise RuntimeError("OPENAI_API_KEY is missing")
