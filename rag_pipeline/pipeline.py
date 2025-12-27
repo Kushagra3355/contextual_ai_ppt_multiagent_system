@@ -16,7 +16,7 @@ class RAGPipeline:
         chunks = split_documents(documents, 800, 120)
         build_vectorstore(chunks)
 
-        print(f"✅ Ingested {len(chunks)} chunks")
+        print(f"Ingested {len(chunks)} chunks")
 
     def load(self):
         """
