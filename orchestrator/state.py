@@ -17,6 +17,6 @@ class reviewer_agent_schema(BaseModel):  # qa agent
     bullet_points: str = Field(description="Write the content for the slides")
 
 
-class format_optimizer_agent_schema(BaseModel):  ##optimizes the format
-    slides: list[str] = Field(description="Give the outline of the ppt.")
-    bullet_points: str = Field(description="Write the content for the slides")
+# class format_optimizer_agent_schema(BaseModel):  ##optimizes the format
+    # slides: list[str] = Field(description="Give the outline of the ppt.")
+    # bullet_points: str = Field(description="Write the content for the slides")
