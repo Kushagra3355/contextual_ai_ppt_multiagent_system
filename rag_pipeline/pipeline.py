@@ -1,29 +1,3 @@
-# class RAGPipeline:
-
-#     def __init__(self):
-#         self.vectorstore = None
-#         self.retriever = None
-
-#     def build(self, file_path):
-#         docs = load_documents(file_path=file_path)
-#         split_docs = split_documents(documents=docs, chunk_overlap=120, chunk_size=600)
-#         self.vectorstore = build_vectorstore(
-#             chunks=split_docs, persist_directory="vector_db"
-#         )
-#         self.retriever = get_retriever(self.vectorstore, 5)
-
-#     def load(self):
-#         self.vectorstore = load_vectorstore(persist_directory="vector_db")
-#         self.retriever = get_retriever(self.vectorstore)
-
-#     def query(self, question, k=5):
-#         if not self.retriever:
-#             raise RuntimeError("RAGPipeline not built or loaded")
-
-#         docs = self.retriever._get_relevant_documents(question)
-
-#         return docs
-
 from rag_pipeline.loader import load_documents
 from rag_pipeline.splitter import split_documents
 from rag_pipeline.vector_store import build_vectorstore, load_vectorstore
