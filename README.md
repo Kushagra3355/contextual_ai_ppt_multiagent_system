@@ -1,114 +1,224 @@
-# Contextual AI PPT Multi-Agent System
+#  Contextual AI PPT Multi-Agent System
 
-Generate PowerPoint presentations from uploaded documents using a multi-agent AI pipeline.
+An intelligent, multi-agent AI system that automatically generates professional PowerPoint presentations from uploaded documents using **LangGraph**, **RAG (Retrieval-Augmented Generation)**, and **OpenAI**.
 
-## Setup
+##  Features
 
-1. **Create and activate a virtual environment** (optional but recommended):
+- ** Multi-Agent Architecture**: Orchestrated workflow with specialized agents for outline generation, content expansion, review, and export
+- ** RAG Pipeline**: Retrieves relevant context from uploaded documents (PDF, DOCX, TXT) using FAISS vector store
+- ** LangGraph Workflow**: Structured agent orchestration with state management
+- ** Streamlit UI**: Interactive web interface for easy presentation generation
+- ** FastAPI Backend**: RESTful API for asynchronous task processing
+- ** Smart Content**: AI-powered content expansion with citations and contextual information
+- ** Multi-Format Support**: Upload and process various document formats
+- ** Persistent Storage**: Vector database persistence for efficient retrieval
+
+##  Architecture
+
+The system uses a **multi-agent workflow** powered by LangGraph:
+
+1. **Outline Generator Agent**: Creates initial slide structure based on topic and context
+2. **Content Expansion Agent**: Enriches slides with relevant information from RAG pipeline
+3. **Reviewer Agent**: Validates and refines content quality
+4. **Export Agent**: Generates final PowerPoint file
+
+```
+Topic + Context + Documents
+          ↓
+    [RAG Pipeline]
+          ↓
+   Outline Agent → Content Expansion → Reviewer → Export
+          ↓              ↓               ↓           ↓
+      Slides        Enhanced Text    Quality QA   .pptx
+```
+
+##  Quick Start
+
+### Prerequisites
+
+- Python 3.8+
+- OpenAI API key
+- pip package manager
+
+### Installation
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/Kushagra3355/contextual_ai_ppt_multiagent_system.git
+   cd contextual_ai_ppt_multiagent_system
+   ```
+
+2. **Create and activate a virtual environment** (recommended):
 
    ```bash
    python -m venv venv
+
    # Windows
    venv\Scripts\activate
+
    # Linux/macOS
    source venv/bin/activate
    ```
 
-2. **Install dependencies**:
+3. **Install dependencies**:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Configure environment variables** – create a `.env` file in the project root with your API keys:
-   ```
-   OPENAI_API_KEY=sk-...
+4. **Configure environment variables**:
+   Create a `.env` file in the project root:
+   ```env
+   OPENAI_API_KEY=sk-your-openai-api-key-here
    ```
 
-## Running the Application
+##  Usage
 
-### 1. Start the FastAPI backend
+### Option 1: Standalone Streamlit App (Recommended for Quick Start)
 
 ```bash
-uvicorn api.main:app --reload
+streamlit run streamlit_frontend.py
 ```
 
-The API will be available at `http://localhost:8000`.
+Access the app at `http://localhost:8501`
 
-### 2. Start the Streamlit frontend
+### Option 2: FastAPI Backend + Frontend 
 
-```bash
-streamlit run frontend.py
-```
+(coming soon!!)
 
-Open the URL shown in your terminal (usually `http://localhost:8501`).
+###  Generating Presentations
 
-## Usage
+1. **Enter Topic**: Specify the presentation subject
+2. **Add Context** (optional): Provide additional details or requirements
+3. **Upload Documents**: Select PDF, DOCX, or TXT files for context
+4. **Configure Settings**:
+   - Number of slides
+   - Content depth
+   - Style preferences
+5. **Generate**: Click "Generate PPT" and wait for processing
+6. **Download**: Retrieve your generated PowerPoint presentation
 
-1. Enter the **Topic** for your presentation.
-2. Optionally add extra **Context**.
-3. **Upload** one or more documents (PDF, TXT, DOCX, etc.).
-4. Click **Generate PPT**.
-5. Wait for processing (use _Check Status_ or enable _Auto-poll_).
-6. Once complete, click **Download PPT**.
-
-## Project Structure
+##  Project Structure
 
 ```
 contextual_ai_ppt_multiagent_system/
-├── frontend.py                 # Streamlit UI for uploading docs & generating PPTs
-├── requirements.txt            # Python dependencies
-├── .env                        # Environment variables (OPENAI_API_KEY, etc.)
+├──  frontend.py                        # Streamlit UI (API-based)
+├──  streamlit_frontend.py              # Standalone Streamlit app
+├──  requirements.txt                   # Python dependencies
+├──  .env                               # Environment variables (OPENAI_API_KEY)
 │
-├── api/
-│   └── main.py                 # FastAPI backend (endpoints: /generate-ppt, /task-status, /download)
+├──  api/
+│   └── main.py                          # FastAPI backend with endpoints
 │
-├── app/
-│   ├── config.py               # Application configuration settings
-│   └── dependencies.py         # Dependency injection helpers
+├──  app/
+│   ├── config.py                        # Application configuration
+│   └── dependencies.py                  # Dependency injection
 │
-├── orchestrator/
-│   ├── ppt_graph.py            # LangGraph workflow defining the multi-agent pipeline
-│   └── agent_state.py          # Shared state schema passed between agents
+├──  orchestrator/
+│   ├── ppt_graph.py                     # LangGraph workflow definition
+│   └── agent_state.py                   # Shared state schema between agents
 │
-├── agents/
-│   ├── outline_generator_agent.py   # Generates slide outline from topic & context
-│   ├── content_expansion_agent.py   # Expands bullet points with RAG-retrieved content
-│   ├── format_optimizer_agent.py    # Optimizes slide layout & formatting
-│   ├── reviewer_agent.py            # Reviews & refines generated content
-│   └── export_agent.py              # Exports final state to .pptx file
+├──  agents/
+│   ├── outline_generator_agent.py       # Creates slide structure
+│   ├── content_expansion_agent.py       # Expands content with RAG
+│   ├── reviewer_agent.py                # Reviews and refines content
+│   └── export_agent.py                  # Generates .pptx file
 │
-├── rag_pipeline/
-│   ├── pipeline.py             # High-level RAG orchestration (ingest + query)
-│   ├── loader.py               # Document loaders (PDF, DOCX, TXT)
-│   ├── splitter.py             # Text chunking strategies
-│   ├── embedding.py            # Embedding model wrapper (OpenAI / local)
-│   ├── vector_store.py         # FAISS vector store management
-│   └── retriever.py            # Similarity search retriever
+├──  rag_pipeline/
+│   ├── pipeline.py                      # RAG orchestration
+│   ├── loader.py                        # Document loaders (PDF, DOCX, TXT)
+│   ├── splitter.py                      # Text chunking strategies
+│   ├── embedding.py                     # Embedding model (OpenAI)
+│   ├── vector_store.py                  # FAISS vector store management
+│   └── retriever.py                     # Similarity search retriever
 │
-├── tools/
-│   ├── chart_generator.py      # Generates charts for slides
-│   ├── citation_tool.py        # Adds citations & references
-│   ├── image_fetcher.py        # Fetches relevant images
-│   └── web_search.py           # Web search for additional context
+├──  tools/
+│   ├── chart_generator.py               # Chart generation for slides
+│   ├── citation_tool.py                 # Citation management
+│   ├── image_fetcher.py                 # Image retrieval
+│   └── web_search.py                    # Web search integration
 │
-├── utils/
-│   └── ppt_generator.py        # python-pptx helper to build .pptx files
+├──  utils/
+│   └── ppt_generator.py                 # python-pptx helper functions
 │
-├── schemas/
-│   ├── ppt_schema.py           # Pydantic models for presentation structure
-│   └── slide_schema.py         # Pydantic models for individual slides
+├──  schemas/
+│   ├── ppt_schema.py                    # Presentation data models
+│   └── slide_schema.py                  # Slide data models
 │
-├── data/
-│   ├── documents/              # Sample/reference documents
-│   └── uploads/                # User-uploaded files (per task_id)
+├──  data/
+│   ├── documents/                       # Reference documents
+│   ├── uploads/                         # User uploads (by task_id)
+│   └── draft.txt                        # Draft content
 │
-├── vector_db/
-│   └── index.faiss             # Persisted FAISS index
+├──  vector_db/
+│   └── index.faiss                      # Persisted FAISS index
 │
-├── output/                     # Generated .pptx files
+├──  output/                           # Generated .pptx files
 │
-└── test/
-    └── rag_test.py             # Unit tests for RAG pipeline
+└──  test/
+    ├── agent_test.py                    # Agent unit tests
+    └── rag_test.py                      # RAG pipeline tests
 ```
+
+##  Technology Stack
+
+| Category                | Technologies                     |
+| ----------------------- | -------------------------------- |
+| **AI/ML**               | OpenAI GPT, LangChain, LangGraph |
+| **Vector DB**           | FAISS                            |
+| **Backend**             | FastAPI, Python 3.8+             |
+| **Frontend**            | Streamlit                        |
+| **Document Processing** | PyPDF, python-docx, docx2txt     |
+| **Presentation**        | python-pptx                      |
+| **Data Models**         | Pydantic                         |
+
+
+##  Customization
+
+### Modifying Agents
+
+Each agent is modular and can be customized:
+
+- **Outline Agent**: Adjust slide structure and titles
+- **Content Expansion**: Modify RAG retrieval parameters
+- **Reviewer**: Change validation criteria
+- **Export**: Customize PowerPoint styling
+
+### RAG Pipeline Configuration
+
+Configure in [rag_pipeline/pipeline.py](rag_pipeline/pipeline.py):
+
+- Chunk size and overlap
+- Embedding model
+- Retrieval parameters (top_k, similarity threshold)
+
+
+##  Acknowledgments
+
+- **LangChain** for the LLM framework
+- **LangGraph** for agent orchestration
+- **OpenAI** for language models
+- **FAISS** for efficient vector search
+- **Streamlit** for rapid UI development
+
+##  Contact
+
+**Kushagra** - [@Kushagra3355](https://github.com/Kushagra3355)
+
+Project Link: [https://github.com/Kushagra3355/contextual_ai_ppt_multiagent_system](https://github.com/Kushagra3355/contextual_ai_ppt_multiagent_system)
+
+##  Roadmap
+
+- [ ] Add support for more document formats (Markdown, HTML)
+- [ ] Implement image generation for slides
+- [ ] Add template customization options
+- [ ] Multi-language support
+- [ ] Real-time collaboration features
+- [ ] Cloud deployment guide (AWS, Azure, GCP)
+- [ ] Enhanced chart and data visualization
+- [ ] Speaker notes generation
+
+---
+
 
