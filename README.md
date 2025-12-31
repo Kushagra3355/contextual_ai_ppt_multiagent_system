@@ -112,6 +112,3 @@ contextual_ai_ppt_multiagent_system/
     └── rag_test.py             # Unit tests for RAG pipeline
 ```
 
-## License
-
-MIT
