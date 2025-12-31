@@ -1,31 +1,30 @@
-from orchestrator.agent_state import ContentSlidesResponse
+from orchestrator.agent_state import PPTAgentState
 from utils.ppt_generator import create_presentation
-from datetime import datetime
 import os
 
 
-def ExportAgent(state: dict) -> dict:
-    """Export final slides to PowerPoint presentation"""
-    final_slides = state.get("final_slides")
-    topic = state.get("topic", "Presentation")
+def ExportAgent(state: PPTAgentState, output_dir: str = "output") -> PPTAgentState:
+    """Export presentation to PowerPoint and draft text file"""
 
-    try:
-        # Generate filename with timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{topic.replace(' ', '_')}_{timestamp}.pptx"
-        output_path = os.path.join("output", filename)
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs("data", exist_ok=True)
 
-        # Ensure output directory exists
-        os.makedirs("output", exist_ok=True)
+    # Save draft
+    with open("data/draft.txt", "w", encoding="utf-8") as f:
+        f.write(f"PRESENTATION: {state.topic}\n{'=' * 80}\n\n")
 
-        # Create presentation
-        file_path = create_presentation(final_slides, output_path, title=topic)
+        for i, slide in enumerate(state.validation_results, 1):
+            f.write(f"SLIDE {i}: {slide.title}\n{'-' * 80}\n")
 
-        return {
-            "export_status": "success",
-            "output_file": file_path,
-            "filename": filename,
-        }
+            for val in slide.validation:
+                f.write(f"{val.point} ({val.status})\n")
+                if val.reason:
+                    f.write(f"   → {val.reason}\n")
+            f.write("\n")
 
-    except Exception as e:
-        return {"export_status": "failed", "error": str(e)}
+    # Export PowerPoint
+    ppt_path = os.path.join(output_dir, f"{state.topic.replace(' ', '_')}.pptx")
+    create_presentation(state.validation_results, ppt_path, state.topic)
+
+    print(f"✓ Exported: data/draft.txt and {ppt_path}")
+    return state

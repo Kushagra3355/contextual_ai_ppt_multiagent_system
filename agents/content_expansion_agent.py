@@ -1,60 +1,47 @@
-from orchestrator.agent_state import ContentExpansion, BulletslidesResponse
-from app.dependencies import llm as get_llm
-from rag_pipeline.pipeline import RAGPipeline
-from typing import List
+from orchestrator.agent_state import ExpandedContentResponse, PPTAgentState
+from app.dependencies import llm as get_llm, get_rag_pipeline
 
 
-def ContentExpansionAgent(state: dict) -> dict:
+def ContentExpansionAgent(state: PPTAgentState) -> PPTAgentState:
     """Expand bullet points into detailed content"""
-    outline = state.get("outline")
-    context = state.get("context", "")
-    topic = state.get("topic", "")
 
-    rag = RAGPipeline()
+    outline = state.outline
+    topic = state.topic
+
+    # Get RAG context once
+    rag_context = ""
     try:
-        rag.load()
-        relevant_docs = rag.query(f"{topic} detailed information")
+        rag = get_rag_pipeline()
+        relevant_docs = rag.query(topic)
         rag_context = "\n\n".join([doc.page_content for doc in relevant_docs[:5]])
     except:
-        rag_context = "No detailed information available."
+        pass
 
+    # Use structured output
     llm = get_llm()
-    expanded_slides = []
+    structured_llm = llm.with_structured_output(ExpandedContentResponse)
 
-    for slide in outline.slides:
-        # Query RAG for slide-specific information
-        try:
-            slide_docs = rag.query(slide.title)
-            slide_context = "\n".join([doc.page_content for doc in slide_docs[:3]])
-        except:
-            slide_context = ""
+    # Build slides text
+    slides_text = "\n\n".join(
+        [
+            f"Slide: {slide.title}\nBullet Points:\n"
+            + "\n".join(f"- {point}" for point in slide.bullet_points)
+            for slide in outline.slides
+        ]
+    )
 
-        prompt = f"""
-Expand the following bullet points into detailed, factual statements:
+    prompt = f"""Expand each bullet point into 10-20 words factual sentences.
 
-Slide Title: {slide.title}
-Bullet Points:
-{chr(10).join(f"- {point}" for point in slide.bullet_points)}
+Topic: {topic}
 
-Context: {context}
+{slides_text}
 
-Relevant Knowledge Base Information:
+Knowledge Base Information:
 {rag_context}
 
-Slide-Specific Information:
-{slide_context}
+Keep content accurate and presentation-ready."""
 
-Provide 2-3 detailed, factual sentences for each bullet point using the retrieved information.
-Keep content accurate and presentation-ready.
-"""
+    result = structured_llm.invoke(prompt)
 
-        response = llm.invoke(prompt)
-        detailed_points = [
-            point.strip() for point in response.content.split("\n") if point.strip()
-        ]
-
-        expanded_slides.append(
-            ContentExpansion(title=slide.title, detailed_points=detailed_points)
-        )
-
-    return {"expanded_content": expanded_slides}
+    state.expanded_content = result.slides
+    return state
