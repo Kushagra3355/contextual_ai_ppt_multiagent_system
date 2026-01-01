@@ -3,7 +3,7 @@ from utils.ppt_generator import create_presentation
 import os
 
 
-def ExportAgent(state: PPTAgentState, output_dir: str = "output") -> PPTAgentState:
+def ExportAgent(state: PPTAgentState, output_dir: str = "outputs") -> PPTAgentState:
     """Export presentation to PowerPoint and draft text file"""
 
     os.makedirs(output_dir, exist_ok=True)
@@ -23,7 +23,7 @@ def ExportAgent(state: PPTAgentState, output_dir: str = "output") -> PPTAgentSta
             f.write("\n")
 
     # Export PowerPoint
-    ppt_path = os.path.join(output_dir, f"{state.topic.replace(' ', '_')}.pptx")
+    ppt_path = os.path.join(output_dir, "generated_ppt.pptx")
     create_presentation(state.validation_results, ppt_path, state.topic)
 
     print(f"✓ Exported: data/draft.txt and {ppt_path}")
