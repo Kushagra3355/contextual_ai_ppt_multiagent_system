@@ -160,7 +160,7 @@ with col1:
             try:
                 # Create temporary directory for uploaded files
                 temp_dir = tempfile.mkdtemp()
-                output_dir = "output"
+                output_dir = "outputs"
 
                 with st.spinner("📁 Processing uploaded files..."):
                     # Save uploaded files to temp directory
@@ -203,9 +203,8 @@ with col1:
                 # Clean up temp directory
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
-                # Store result in session state
-                filename = f"{topic.replace(' ', '_')}.pptx"
-                output_path = os.path.join(output_dir, filename)
+                # Store result in session state - ExportAgent saves as generated_ppt.pptx
+                output_path = os.path.join(output_dir, "generated_ppt.pptx")
 
                 st.session_state["output_file"] = output_path
                 st.session_state["topic"] = topic
@@ -246,57 +245,24 @@ with col2:
 st.markdown("---")
 
 if st.session_state.get("generation_complete"):
-    topic = st.session_state.get("topic", "Your Presentation")
     output_file = st.session_state.get("output_file")
 
     st.header("✅ Generation Complete!")
 
-    col1, col2 = st.columns([2, 1])
+    if output_file and os.path.exists(output_file):
+        # Read file for download
+        with open(output_file, "rb") as f:
+            ppt_bytes = f.read()
 
-    with col1:
-        st.markdown(f"### 📊 {topic}")
-        st.success("Your presentation has been generated successfully!")
-
-        if output_file and os.path.exists(output_file):
-            # Read file for download
-            with open(output_file, "rb") as f:
-                ppt_bytes = f.read()
-
-            st.download_button(
-                label="⬇️ Download Presentation",
-                data=ppt_bytes,
-                file_name=os.path.basename(output_file),
-                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                use_container_width=True,
-            )
-        else:
-            st.warning("Output file not found. It may have been moved or deleted.")
-
-    with col2:
-        st.metric("Status", "Complete", delta="✓")
-
-        # Show stage indicator
-        stage = st.session_state.get("current_stage", "Complete")
-        st.info(f"🎯 Stage: {stage}")
-
-    st.markdown("---")
-
-    col_action1, col_action2 = st.columns(2)
-
-    with col_action1:
-        if st.button("🔄 Create Another Presentation", use_container_width=True):
-            # Clear session state
-            for key in ["generation_complete", "output_file", "topic", "current_stage"]:
-                if key in st.session_state:
-                    del st.session_state[key]
-            st.rerun()
-
-    with col_action2:
-        if output_file and os.path.exists(output_file):
-            if st.button("📂 Open Output Folder", use_container_width=True):
-                output_folder = os.path.dirname(output_file)
-                os.startfile(output_folder)
-                st.success(f"Opened: {output_folder}")
+        st.download_button(
+            label="⬇️ Download Presentation",
+            data=ppt_bytes,
+            file_name="generated_ppt.pptx",
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            use_container_width=True,
+        )
+    else:
+        st.warning("Output file not found. It may have been moved or deleted.")
 
 # Footer
 st.markdown("---")
