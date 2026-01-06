@@ -1,6 +1,5 @@
 from langchain_community.vectorstores import FAISS
 from rag_pipeline.embedding import get_embedding_function
-import os
 
 
 def build_vectorstore(chunks, persist_directory="vector_db"):
