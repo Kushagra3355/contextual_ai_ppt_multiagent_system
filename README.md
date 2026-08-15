@@ -1,20 +1,20 @@
-# 🤖 AI PowerPoint Generator - Multi-Agent System
+#  AI PowerPoint Generator - Multi-Agent System
 
-🚀Live Demo: https://ai-ppt-generator-sys.streamlit.app/ 
+Live Demo: https://ai-ppt-generator-sys.streamlit.app/ 
 
 > Transform your documents into professional PowerPoint presentations using AI-powered multi-agent orchestration, RAG (Retrieval-Augmented Generation), and LangGraph workflows.
 
-## ✨ Features
+##  Features
 
-- 🤖 **Multi-Agent Architecture** - Specialized agents for outline, content expansion, review, and export
-- 📚 **RAG Pipeline** - Context-aware content generation from uploaded documents (PDF, DOCX, TXT)
-- 🔄 **LangGraph Orchestration** - Structured workflow with state management
-- 🌐 **Dual Interface** - Streamlit web UI + FastAPI REST API
-- 🎯 **Smart Content Generation** - AI-powered slide creation with citations
-- 💾 **FAISS Vector Store** - Efficient document retrieval and semantic search
-- 📊 **Professional Output** - Polished PowerPoint presentations ready to use
+-  **Multi-Agent Architecture** - Specialized agents for outline, content expansion, review, and export
+-  **RAG Pipeline** - Context-aware content generation from uploaded documents (PDF, DOCX, TXT)
+-  **LangGraph Orchestration** - Structured workflow with state management
+-  **Dual Interface** - Streamlit web UI + FastAPI REST API
+-  **Smart Content Generation** - AI-powered slide creation with citations
+-  **FAISS Vector Store** - Efficient document retrieval and semantic search
+-  **Professional Output** - Polished PowerPoint presentations ready to use
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Multi-Agent Workflow
 
@@ -38,7 +38,7 @@ graph LR
 | **Reviewer**          | Validates accuracy & quality    | Quality-checked content      |
 | **Exporter**          | Generates PowerPoint file       | `.pptx` file                 |
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -86,7 +86,7 @@ DIMENSIONS=512
 CHUNK_SIZE=1000
 ```
 
-## 💻 Usage
+##  Usage
 
 ### Option 1: Streamlit Web App
 
@@ -100,10 +100,10 @@ streamlit run streamlit_frontend.py
 
 #### Features:
 
-- ✅ Drag-and-drop file upload
-- ✅ Real-time progress tracking
-- ✅ One-click download
-- ✅ Responsive UI with tips
+-  Drag-and-drop file upload
+-  Real-time progress tracking
+-  One-click download
+-  Responsive UI with tips
 
 ### Option 2: FastAPI REST API
 
@@ -136,31 +136,31 @@ uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 | `GET`    | `/health`                | Health check          |
 
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 contextual_ai_ppt_multiagent_system/
 │
-├── 📄 streamlit_frontend.py          # Streamlit web application
-├── 📄 requirements.txt                # Python dependencies
-├── 📄 .env                            # Environment configuration
-├── 📄 README.md                       # Documentation
+├──  streamlit_frontend.py          # Streamlit web application
+├──  requirements.txt                # Python dependencies
+├──  .env                            # Environment configuration
+├──  README.md                       # Documentation
 │
-├── 📂 api/                            # FastAPI Backend
+├──  api/                            # FastAPI Backend
 │   └── main.py                        # Complete API with all endpoints
 │
-├── 📂 orchestrator/                   # LangGraph Workflow
+├──  orchestrator/                   # LangGraph Workflow
 │   ├── ppt_graph.py                   # Workflow definition
 │   └── agent_state.py                 # Shared state schema
 │
-├── 📂 agents/                         # Specialized Agents
+├──  agents/                         # Specialized Agents
 │   ├── __init__.py
 │   ├── outline_generator_agent.py     # Slide structure
 │   ├── content_expansion_agent.py     # RAG-based expansion
 │   ├── reviewer_agent.py              # Quality assurance
 │   └── export_agent.py                # PowerPoint export
 │
-├── 📂 rag_pipeline/                   # RAG Implementation
+├──  rag_pipeline/                   # RAG Implementation
 │   ├── __init__.py
 │   ├── pipeline.py                    # RAG orchestration
 │   ├── loader.py                      # Document loaders
@@ -169,37 +169,37 @@ contextual_ai_ppt_multiagent_system/
 │   ├── vector_store.py                # FAISS vector DB
 │   └── retriever.py                   # Similarity search
 │
-├── 📂 tools/                          # Helper Tools
+├──  tools/                          # Helper Tools
 │   ├── chart_generator.py             # Chart generation
 │   ├── citation_tool.py               # Citation management
 │   ├── image_fetcher.py               # Image retrieval
 │   └── web_search.py                  # Web search
 │
-├── 📂 utils/                          # Utilities
+├──  utils/                          # Utilities
 │   └── ppt_generator.py               # python-pptx helpers
 │
-├── 📂 schemas/                        # Data Models
+├──  schemas/                        # Data Models
 │   ├── ppt_schema.py                  # Presentation models
 │   └── slide_schema.py                # Slide models
 │
-├── 📂 data/                           # Data Storage
+├──  data/                           # Data Storage
 │   ├── documents/                     # Reference docs
 │   ├── uploads/                       # User uploads (by session)
 │   └── draft.txt                      # Content draft
 │
-├── 📂 vector_db/                      # Vector Database
+├──  vector_db/                      # Vector Database
 │   └── index.faiss                    # FAISS index
 │
-├── 📂 outputs/                        # Generated Files
+├──  outputs/                        # Generated Files
 │   └── generated_ppt.pptx             # Output presentation
 │
-└── 📂 test/                           # Tests
+└──  test/                           # Tests
     ├── __init__.py
     ├── agent_test.py                  # Agent tests
     └── rag_test.py                    # RAG pipeline tests
 ```
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Category                | Technologies                       |
 | ----------------------- | ---------------------------------- |
@@ -212,7 +212,7 @@ contextual_ai_ppt_multiagent_system/
 | **Data Models**         | Pydantic                           |
 | **API Docs**            | Swagger/OpenAPI                    |
 
-## ⚙️ Configuration
+##  Configuration
 
 ### Environment Variables
 
@@ -239,7 +239,7 @@ top_k = 5
 similarity_threshold = 0.7
 ```
 
-## 🎨 Customization
+##  Customization
 
 ### Modify Agent Behavior
 
@@ -270,7 +270,7 @@ Each agent can be customized independently:
 ```
 
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -298,7 +298,7 @@ uvicorn api.main:app --port 8001
 streamlit run streamlit_frontend.py --server.port 8502
 ```
 
-## 📊 Performance
+##  Performance
 
 | Metric               | Value         |
 | -------------------- | ------------- |
@@ -307,7 +307,7 @@ streamlit run streamlit_frontend.py --server.port 8502
 | Max Slides           | 20            |
 | Concurrent Sessions  | 10+           |
 
-## 🗺️ Roadmap
+##  Roadmap
 
 - [x] Multi-agent architecture with LangGraph
 - [x] RAG pipeline with FAISS
@@ -329,7 +329,8 @@ streamlit run streamlit_frontend.py --server.port 8502
 - [ ] Rate limiting & authentication
 
 
-## 👤 Author
+##  Author
+Kushagra Omar
 
 **Kushagra Omar**
 
